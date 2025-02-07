@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph" app:startDestination="@id/splashFragment">
+
+    <fragment android:id="@+id/splashFragment" android:name="com.example.myapplication.ui.splash.SplashFragment" android:label="SplashFragment">
+        <action android:id="@+id/action_splash_to_language" app:destination="@id/languageFragment" app:popUpTo="@id/splashFragment" app:popUpToInclusive="true" />
+        <action android:id="@+id/action_splash_to_home" app:destination="@id/homeFragment" app:popUpTo="@id/splashFragment" app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment android:id="@+id/languageFragment" android:name="com.example.myapplication.ui.language.LanguageFragment" android:label="LanguageFragment">
+        <action android:id="@+id/action_language_to_home" app:destination="@id/homeFragment" app:popUpTo="@id/languageFragment" app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment android:id="@+id/homeFragment" android:name="com.example.myapplication.ui.home.HomeFragment" android:label="HomeFragment">
+
+        <action android:id="@+id/action_home_to_language" app:destination="@id/languageFragment" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right" />
+
+        <action android:id="@+id/action_home_to_create" app:destination="@id/createEntryFragment" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right" />
+
+        <action android:id="@+id/action_home_to_edit" app:destination="@id/editEntryFragment" app:enterAnim="@anim/slide_in_right" app:exitAnim="@anim/slide_out_left" app:popEnterAnim="@anim/slide_in_left" app:popExitAnim="@anim/slide_out_right">
+            <argument android:name="entryId" app:argType="long" />
+        </action>
+    </fragment>
+
+    <fragment android:id="@+id/createEntryFragment" android:name="com.example.myapplication.ui.create.CreateEntryFragment" android:label="CreateEntryFragment">
+        <action android:id="@+id/action_create_to_permission" app:destination="@id/permissionFragment" app:popUpTo="@id/createEntryFragment" app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment android:id="@+id/editEntryFragment" android:name="com.example.myapplication.ui.edit.EditEntryFragment" android:label="EditEntryFragment">
+        <argument android:name="entryId" app:argType="long" />
+
+        <action android:id="@+id/action_edit_to_home" app:destination="@id/homeFragment" app:popUpTo="@id/homeFragment" app:popUpToInclusive="false" />
+
+        <action android:id="@+id/action_edit_to_permission" app:destination="@id/permissionFragment" app:popUpTo="@id/editEntryFragment" app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment android:id="@+id/permissionFragment" android:name="com.example.myapplication.ui.permission.PermissionFragment">
+        <argument android:name="selectedImages" app:argType="string[]" app:nullable="true" android:defaultValue="@null" />
+        <action android:id="@+id/action_permission_to_image" app:destination="@id/imageFragment" app:popUpTo="@id/permissionFragment" app:popUpToInclusive="true">
+            <argument android:name="selectedImages" app:argType="string[]" app:nullable="true" />
+        </action>
+    </fragment>
+
+    <fragment android:id="@+id/imageFragment" android:name="com.example.myapplication.ui.image.ImageFragment">
+        <argument android:name="selectedImages" app:argType="string[]" app:nullable="true" />
+    </fragment>
+
+</navigation> 

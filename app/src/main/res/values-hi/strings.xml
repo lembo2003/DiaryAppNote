@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">मेरी डायरी</string>
+    <string name="app_logo">ऐप लोगो</string>
+
+    <!-- Common -->
+    <string name="back">वापस</string>
+    <string name="close">बंद करें</string>
+    <string name="menu">मेनू</string>
+    <string name="save">सहेजें</string>
+    <string name="create">बनाएं</string>
+    <string name="delete">हटाएं</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="edit">संपादित करें</string>
+    <string name="discard">छोड़ें</string>
+
+    <!-- Language Screen -->
+    <string name="language">भाषा</string>
+    <string name="language_flag">भाषा का झंडा</string>
+    <string name="native_text">मूल</string>
+    <string name="button_continue">जारी रखें</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">मेरी डायरी</string>
+    <string name="change_language">भाषा बदलें</string>
+    <string name="add_entry">नई एंट्री</string>
+    <string name="no_entries">कोई एंट्री नहीं</string>
+    <string name="how_about_you_today">आज आप कैसे हैं?</string>
+    <string name="diary_empty">अरे, डायरी खाली है!</string>
+
+    <!-- Entry Screens -->
+    <string name="entry_title_hint">शीर्षक</string>
+    <string name="entry_content_hint">अपने विचार लिखें…</string>
+    <string name="add_image">छवि जोड़ें</string>
+    <string name="feeling">आप कैसा महसूस कर रहे हैं?</string>
+    <string name="title_required">शीर्षक आवश्यक है</string>
+    <string name="content_required">सामग्री आवश्यक है</string>
+
+    <!-- Dialog Messages -->
+    <string name="delete_confirmation">क्या आप वाकई इस एंट्री को हटाना चाहते हैं?</string>
+    <string name="discard_changes_message">आपके पास बिना सहेजे गए बदलाव हैं। क्या आप उन्हें छोड़ना चाहते हैं?</string>
+
+    <!-- Permission Screen -->
+    <string name="permissions_title">स्टोरेज अनुमति</string>
+    <string name="permissions_description">हमें आपकी डायरी एंट्री और छवियों को सुरक्षित रूप से सहेजने के लिए स्टोरेज अनुमति की आवश्यकता है।</string>
+    <string name="permissions_image">अनुमति छवि</string>
+    <string name="grant_permissions">अनुमतियां दें</string>
+
+    <!-- Others -->
+    <string name="select_images">छवियां चुनें</string>
+    <string name="done">हो गया</string>
+    <string name="gallery_image">गैलरी छवि</string>
+    <string name="access_photos_permission">फ़ोटो एक्सेस अनुमति</string>
+    <string name="permission_not_allowed">अनुमति नहीं दी गई।</string>
+    <string name="error">त्रुटि</string>
+    <string name="ok">ठीक है</string>
+    <string name="entry_not_found">एंट्री नहीं मिली</string>
+    <string name="permission_required">अनुमति आवश्यक</string>
+    <string name="permission_rationale">छवियों तक पहुंचने के लिए स्टोरेज अनुमति आवश्यक है</string>
+    <string name="grant">अनुमति दें</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="error_loading_images">गैलरी से छवियां लोड करने में त्रुटि</string>
+    <string name="retry">पुनः प्रयास करें</string>
+    <string name="no_images_found">गैलरी में कोई छवि नहीं मिली</string>
+    <string name="exit_confirmation">क्या आप वाकई बाहर निकलना चाहते हैं?</string>
+    <string name="exit">बाहर निकलें</string>
+    <string name="album">एल्बम</string>
+</resources>

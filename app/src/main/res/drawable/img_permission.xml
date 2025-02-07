@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="240dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+    
+    <!-- Two people illustration -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M120,120m-60,0a60,60 0,1 1,120 0a60,60 0,1 1,-120 0"/>
+    
+    <!-- Phone/device shape -->
+    <path
+        android:fillColor="@color/primary_variant"
+        android:pathData="M160,80L80,80A20,20 0,0 0,60 100L60,180A20,20 0,0 0,80 200L160,200A20,20 0,0 0,180 180L180,100A20,20 0,0 0,160 80z"/>
+    
+    <!-- Lock icon -->
+    <path
+        android:fillColor="@color/text_primary"
+        android:pathData="M140,140L100,140L100,120A20,20 0,0 1,140 120L140,140z"/>
+    <path
+        android:fillColor="@color/text_primary"
+        android:pathData="M120,150m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0"/>
+</vector> 

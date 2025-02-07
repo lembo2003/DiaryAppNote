@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">আমার ডায়েরি</string>
+    <string name="app_logo">অ্যাপ লোগো</string>
+
+    <!-- Common -->
+    <string name="back">পিছনে</string>
+    <string name="close">বন্ধ করুন</string>
+    <string name="menu">মেনু</string>
+    <string name="save">সংরক্ষণ</string>
+    <string name="create">তৈরি করুন</string>
+    <string name="delete">মুছে ফেলুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="edit">সম্পাদনা</string>
+    <string name="discard">বাতিল করুন</string>
+
+    <!-- Language Screen -->
+    <string name="language">ভাষা</string>
+    <string name="language_flag">ভাষার পতাকা</string>
+    <string name="native_text">মাতৃভাষা</string>
+    <string name="button_continue">এগিয়ে যান</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">আমার ডায়েরি</string>
+    <string name="change_language">ভাষা পরিবর্তন</string>
+    <string name="add_entry">নতুন এন্ট্রি</string>
+    <string name="no_entries">কোন এন্ট্রি নেই</string>
+    <string name="how_about_you_today">আজ আপনার কেমন লাগছে?</string>
+    <string name="diary_empty">ওহ, ডায়েরি খালি!</string>
+
+    <!-- Entry Screens -->
+    <string name="entry_title_hint">শিরোনাম</string>
+    <string name="entry_content_hint">আপনার চিন্তাগুলি লিখুন…</string>
+    <string name="add_image">ছবি যোগ করুন</string>
+    <string name="feeling">আপনার কেমন লাগছে?</string>
+    <string name="title_required">শিরোনাম প্রয়োজন</string>
+    <string name="content_required">বিষয়বস্তু প্রয়োজন</string>
+
+    <!-- Dialog Messages -->
+    <string name="delete_confirmation">আপনি কি নিশ্চিত এই এন্ট্রি মুছে ফেলতে চান?</string>
+    <string name="discard_changes_message">আপনার অসংরক্ষিত পরিবর্তন আছে। আপনি কি সেগুলি বাতিল করতে চান?</string>
+
+    <!-- Permission Screen -->
+    <string name="permissions_title">স্টোরেজ অনুমতি</string>
+    <string name="permissions_description">আমাদের আপনার ডায়েরি এন্ট্রি এবং ছবিগুলি নিরাপদে সংরক্ষণ করার জন্য স্টোরেজ অনুমতি প্রয়োজন।</string>
+    <string name="permissions_image">অনুমতি ছবি</string>
+    <string name="grant_permissions">অনুমতি দিন</string>
+
+    <!-- Others -->
+    <string name="select_images">ছবি নির্বাচন করুন</string>
+    <string name="done">সম্পন্ন</string>
+    <string name="gallery_image">গ্যালারি ছবি</string>
+    <string name="access_photos_permission">ফটো অ্যাক্সেস অনুমতি</string>
+    <string name="permission_not_allowed">অনুমতি দেওয়া হয়নি।</string>
+    <string name="error">ত্রুটি</string>
+    <string name="ok">ঠিক আছে</string>
+    <string name="entry_not_found">এন্ট্রি পাওয়া যায়নি</string>
+    <string name="permission_required">অনুমতি প্রয়োজন</string>
+    <string name="permission_rationale">আপনার ছবিগুলি অ্যাক্সেস করার জন্য স্টোরেজ অনুমতি প্রয়োজন</string>
+    <string name="grant">অনুমতি দিন</string>
+    <string name="settings">সেটিংস</string>
+    <string name="error_loading_images">গ্যালারি থেকে ছবি লোড করতে ত্রুটি</string>
+    <string name="retry">পুনরায় চেষ্টা করুন</string>
+    <string name="no_images_found">গ্যালারিতে কোন ছবি পাওয়া যায়নি</string>
+    <string name="exit_confirmation">আপনি কি নিশ্চিত বের হতে চান?</string>
+    <string name="exit">প্রস্থান</string>
+    <string name="album">অ্যালবাম</string>
+</resources> 

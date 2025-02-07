@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">يومياتي</string>
+    <string name="app_logo">شعار التطبيق</string>
+
+    <!-- Common -->
+    <string name="back">رجوع</string>
+    <string name="close">إغلاق</string>
+    <string name="menu">القائمة</string>
+    <string name="save">حفظ</string>
+    <string name="create">إنشاء</string>
+    <string name="delete">حذف</string>
+    <string name="cancel">إلغاء</string>
+    <string name="edit">تعديل</string>
+    <string name="discard">تجاهل</string>
+
+    <!-- Language Screen -->
+    <string name="language">اللغة</string>
+    <string name="language_flag">علم اللغة</string>
+    <string name="native_text">اللغة الأم</string>
+    <string name="button_continue">متابعة</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">يومياتي</string>
+    <string name="change_language">تغيير اللغة</string>
+    <string name="add_entry">إضافة مدخل</string>
+    <string name="no_entries">لا توجد مدخلات</string>
+    <string name="how_about_you_today">كيف حالك اليوم؟</string>
+    <string name="diary_empty">عذراً، اليوميات فارغة!</string>
+
+    <!-- Entry Screens -->
+    <string name="entry_title_hint">العنوان</string>
+    <string name="entry_content_hint">اكتب أفكارك…</string>
+    <string name="add_image">إضافة صورة</string>
+    <string name="feeling">كيف تشعر؟</string>
+    <string name="title_required">العنوان مطلوب</string>
+    <string name="content_required">المحتوى مطلوب</string>
+
+    <!-- Dialog Messages -->
+    <string name="delete_confirmation">هل أنت متأكد من حذف هذا المدخل؟</string>
+    <string name="discard_changes_message">لديك تغييرات غير محفوظة. هل تريد تجاهلها؟</string>
+
+    <!-- Permission Screen -->
+    <string name="permissions_title">إذن التخزين</string>
+    <string name="permissions_description">نحتاج إذن التخزين لحفظ مدخلات يومياتك وصورك بشكل آمن.</string>
+    <string name="permissions_image">صورة الإذن</string>
+    <string name="grant_permissions">منح الأذونات</string>
+
+    <!-- Others -->
+    <string name="select_images">اختيار الصور</string>
+    <string name="done">تم</string>
+    <string name="gallery_image">صورة المعرض</string>
+    <string name="access_photos_permission">إذن الوصول للصور</string>
+    <string name="permission_not_allowed">لم يتم منح الإذن.</string>
+    <string name="error">خطأ</string>
+    <string name="ok">موافق</string>
+    <string name="entry_not_found">لم يتم العثور على المدخل</string>
+    <string name="permission_required">الإذن مطلوب</string>
+    <string name="permission_rationale">إذن التخزين مطلوب للوصول إلى صورك</string>
+    <string name="grant">منح</string>
+    <string name="settings">الإعدادات</string>
+    <string name="error_loading_images">خطأ في تحميل الصور من المعرض</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="no_images_found">لم يتم العثور على صور في المعرض</string>
+    <string name="exit_confirmation">هل أنت متأكد من الخروج؟</string>
+    <string name="exit">خروج</string>
+    <string name="album">ألبوم</string>
+</resources> 

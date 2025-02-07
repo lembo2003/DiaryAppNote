@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background">
+
+    <include android:id="@+id/includeToolbar" layout="@layout/layout_entry_toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView android:id="@+id/cardEntry" android:layout_width="match_parent" android:layout_height="0dp" android:layout_margin="16dp" app:cardCornerRadius="8dp" app:cardElevation="0dp" app:layout_constraintBottom_toTopOf="@id/tvFeeling" app:layout_constraintTop_toBottomOf="@id/includeToolbar">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:paddingTop="64dp" android:paddingStart="32dp" android:paddingEnd="16dp" android:paddingBottom="16dp" android:background="@drawable/note_background">
+
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@null" app:boxBackgroundColor="@android:color/transparent" app:boxBackgroundMode="none" app:errorEnabled="true" app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@null" android:hint="@string/entry_title_hint" android:importantForAutofill="no" android:inputType="textCapSentences" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilContent" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:background="@null" app:boxBackgroundColor="@android:color/transparent" app:boxBackgroundMode="none" app:errorEnabled="true" app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etContent" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@null" android:gravity="top" android:hint="@string/entry_content_hint" android:importantForAutofill="no" android:inputType="textCapSentences|textMultiLine" android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvSelectedImages" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="32dp" android:clipToPadding="false" android:orientation="horizontal" android:paddingBottom="8dp" android:visibility="gone" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView android:id="@+id/tvFeeling" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:layout_marginBottom="8dp" android:text="@string/feeling" android:textColor="@color/text_primary" android:textSize="16sp" app:layout_constraintBottom_toTopOf="@id/rvFeelings" app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvFeelings" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="16dp" android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@id/btnSave" />
+
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnSave" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="16dp" android:backgroundTint="@color/primary" android:padding="12dp" android:text="@string/save" android:textColor="@color/white" android:visibility="gone" app:cornerRadius="8dp" app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Semi-transparent background should be below the dialog -->
+    <View android:id="@+id/dialogBackground" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#80000000" android:visibility="gone" android:clickable="true" android:focusable="true" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Custom delete dialog should be on top -->
+    <androidx.cardview.widget.CardView android:id="@+id/dialogContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="32dp" android:visibility="gone" app:cardCornerRadius="16dp" app:cardElevation="8dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
+
+        <include android:id="@+id/includeDeleteDialog" layout="@layout/dialog_delete" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout> 

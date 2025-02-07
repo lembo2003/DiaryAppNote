@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/background" android:orientation="vertical">
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="224dp" android:background="@drawable/linear_1">
+
+        <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" android:contentDescription="@string/app_logo" android:src="@drawable/parents_and_children_play_with_smiles_on_faces_of_house" />
+
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:paddingStart="16dp" android:paddingEnd="16dp">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:fontFamily="@font/mplusrounded1c" android:text="@string/how_about_you_today" android:textColor="@color/text_primary" android:textFontWeight="800" android:textSize="18sp" />
+
+            <ImageButton android:id="@+id/btnLanguage" android:layout_width="50dp" android:layout_height="50dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:background="@drawable/bg_language_selector" android:contentDescription="@string/language" android:src="@drawable/ic_english" android:padding="8dp"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="16dp">
+
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvDiaries" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:overScrollMode="never" android:paddingBottom="80dp" tools:listitem="@layout/item_diary"/>
+
+        <LinearLayout android:id="@+id/emptyView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" android:gravity="center_horizontal" android:orientation="vertical" android:visibility="gone">
+
+            <ImageView android:layout_width="200dp" android:layout_height="200dp" android:src="@drawable/diaryisblank" android:contentDescription="@string/diary_empty" android:layout_marginBottom="16dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/mplusrounded1c" android:text="@string/diary_empty" android:textColor="#3D3D3D" android:textFontWeight="400" android:textSize="14sp" />
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fabAdd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_alignParentBottom="true" android:layout_marginBottom="16dp" android:contentDescription="@string/add_entry" android:src="@drawable/ic_add1" app:tint="@color/white" app:backgroundTint="@color/primary" app:fabSize="normal"/>
+
+    </RelativeLayout>
+
+</LinearLayout> 
