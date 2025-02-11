@@ -63,7 +63,7 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
         ) { images ->
             if (images != null && images.isNotEmpty()) {
                 viewModel.setSelectedImages(images)
-                updateSelectedImages(images)
+
                 hasUnsavedChanges = true
                 // Clear the saved state handle
                 findNavController().currentBackStackEntry?.savedStateHandle?.remove<ArrayList<String>>("selected_images")
@@ -111,8 +111,9 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
                 toggleEditMode()
             }
 
-            btnToolbarDelete.setOnClickListener {
-                if (isEditMode) {
+            btnToolbarDelete.apply {
+                isVisible = true
+                setOnClickListener {
                     showDeleteConfirmationDialog()
                 }
             }
@@ -160,17 +161,20 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
 
     private fun toggleEditMode() {
         isEditMode = !isEditMode
-        binding.apply {
-            includeToolbar.apply {
-                btnEdit.setImageResource(
-                    if (isEditMode) R.drawable.ic_close else R.drawable.ic_edit
-                )
-                btnImage.isEnabled = isEditMode
-                btnToolbarDelete.isEnabled = isEditMode
-                tvDate.isEnabled = isEditMode
+        binding.includeToolbar.apply {
+            btnEdit.setImageResource(
+                if (isEditMode) R.drawable.ic_close else R.drawable.ic_edit
+            )
+            btnImage.isEnabled = isEditMode
+            btnToolbarDelete.apply {
+                isEnabled = isEditMode
+                alpha = if (isEditMode) 1f else 0.5f
             }
-            
-            // Enable/disable text fields
+            tvDate.isEnabled = isEditMode
+        }
+        
+        // Enable/disable text fields
+        binding.apply {
             etTitle.isEnabled = isEditMode
             etContent.isEnabled = isEditMode
             
@@ -209,13 +213,19 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
             dialogContainer.visibility = View.VISIBLE
 
             // Setup click listeners
-            includeDeleteDialog.btnDelete.setOnClickListener {
-                hideDeleteDialog()
-                deleteEntry()
-            }
+            includeDeleteDialog.apply {
+                // Set dialog text if needed
+                titleTextView.text = getString(R.string.wait)
+                messageTextView.text = getString(R.string.are_you_sure_you_want_to_delete)
+                
+                btnDelete.setOnClickListener {
+                    hideDeleteDialog()
+                    deleteEntry()
+                }
 
-            includeDeleteDialog.btnCancel.setOnClickListener {
-                hideDeleteDialog()
+                btnCancel.setOnClickListener {
+                    hideDeleteDialog()
+                }
             }
 
             // Optional: dismiss on background click
@@ -273,7 +283,7 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
                     includeToolbar.btnEdit.isVisible = true
                     includeToolbar.btnToolbarDelete.isVisible = true
                     
-                    // Load and display images
+                    // Load and display images - just set in ViewModel, collector will handle UI update
                     val entryImages = currentEntry!!.images
                     viewModel.setSelectedImages(entryImages)
                 }
@@ -319,31 +329,27 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
 
         selectedImagesAdapter.apply {
             isEditMode = false
-            onImageClick = { uri ->
-                ImagePreviewDialog.newInstance(uri)
-                    .show(childFragmentManager, "image_preview")
+            onImageClick = { clickedUri ->
+                ImagePreviewDialog.newInstance(
+                    imageUris = viewModel.selectedImages.value,
+                    selectedUri = clickedUri
+                ).show(childFragmentManager, "image_preview")
             }
             onDeleteClick = { uri ->
                 if (isEditMode) {
-                    val currentImages = viewModel.selectedImages.value.toMutableList()
-                    currentImages.remove(uri)
-                    viewModel.setSelectedImages(currentImages)
+                    viewModel.removeImage(uri)
                     hasUnsavedChanges = true
                 }
             }
         }
 
-        // Only observe DiaryViewModel's images
+        // Observe selected images changes
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.selectedImages.collect { images ->
-                updateSelectedImages(images)
+                binding.rvSelectedImages.isVisible = images.isNotEmpty()
+                selectedImagesAdapter.submitList(images)
             }
         }
-    }
-
-    private fun updateSelectedImages(images: List<String>) {
-        binding.rvSelectedImages.isVisible = images.isNotEmpty()
-        selectedImagesAdapter.submitList(images)
     }
 
     private fun saveCurrentState() {
@@ -371,7 +377,6 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
                 feelingAdapter.setSelectedFeeling(selectedFeeling)
             }
         }
-        updateSelectedImages(viewModel.selectedImages.value)
     }
 
     private fun deleteEntry() {
@@ -403,7 +408,6 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
         // Restore images from backstack if they exist
         findNavController().currentBackStackEntry?.savedStateHandle?.remove<ArrayList<String>>("temp_images")?.let { images ->
             viewModel.setSelectedImages(images)
-            updateSelectedImages(images)
         }
     }
 } 

@@ -129,9 +129,11 @@ class CreateEntryFragment : BaseFragment<FragmentCreateEntryBinding>() {
 
         selectedImagesAdapter.apply {
             isEditMode = true  // Always true for create screen
-            onImageClick = { uri ->
-                ImagePreviewDialog.newInstance(uri)
-                    .show(childFragmentManager, "preview")
+            onImageClick = { clickedUri ->
+                ImagePreviewDialog.newInstance(
+                    imageUris = viewModel.selectedImages.value,
+                    selectedUri = clickedUri
+                ).show(childFragmentManager, "image_preview")
             }
             
             onDeleteClick = { uri ->

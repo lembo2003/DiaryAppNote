@@ -27,7 +27,19 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/mplusrounded1c" android:text="@string/diary_empty" android:textColor="#3D3D3D" android:textFontWeight="400" android:textSize="14sp" />
         </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fabAdd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:layout_alignParentBottom="true" android:layout_marginBottom="16dp" android:contentDescription="@string/add_entry" android:src="@drawable/ic_add1" app:tint="@color/white" app:backgroundTint="@color/primary" app:fabSize="normal"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton 
+            android:id="@+id/fabAdd" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content" 
+            android:layout_alignParentEnd="true" 
+            android:layout_alignParentBottom="true" 
+            android:layout_marginBottom="16dp" 
+            android:contentDescription="@string/add_entry" 
+            android:src="@drawable/ic_add1" 
+            app:tint="@color/white" 
+            app:backgroundTint="@color/primary" 
+            app:fabSize="normal"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"/>
 
     </RelativeLayout>
 

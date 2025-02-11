@@ -5,18 +5,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.DialogImagePreviewBinding
+import com.example.myapplication.ui.adapter.ImageThumbnailAdapter
 
 class ImagePreviewDialog : DialogFragment() {
 
     private var _binding: DialogImagePreviewBinding? = null
     private val binding get() = _binding!!
+    private val thumbnailAdapter = ImageThumbnailAdapter()
+    private var imageUris: List<String> = emptyList()
+    private var currentImageUri: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.Theme_App_Dialog_FullScreen)
+        
+        arguments?.let {
+            imageUris = it.getStringArray(ARG_IMAGE_URIS)?.toList() ?: emptyList()
+            currentImageUri = it.getString(ARG_SELECTED_URI)
+        }
     }
 
     override fun onCreateView(
@@ -31,14 +41,41 @@ class ImagePreviewDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        arguments?.getString(ARG_IMAGE_URI)?.let { uri ->
-            Glide.with(this)
-                .load(uri)
-                .into(binding.ivPreview)
+        setupViews()
+        setupThumbnails()
+        loadMainImage(currentImageUri)
+    }
+
+    private fun setupViews() {
+        binding.apply {
+            btnBack.setOnClickListener { dismiss() }
+            
+            // Setup RecyclerView
+            rvThumbnails.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = thumbnailAdapter
+            }
+        }
+    }
+
+    private fun setupThumbnails() {
+        thumbnailAdapter.submitList(imageUris)
+        currentImageUri?.let { uri ->
+            thumbnailAdapter.setSelectedImage(uri)
         }
 
-        binding.btnClose.setOnClickListener {
-            dismiss()
+        thumbnailAdapter.onThumbnailClick = { clickedUri ->
+            loadMainImage(clickedUri)
+            thumbnailAdapter.setSelectedImage(clickedUri)
+            currentImageUri = clickedUri
+        }
+    }
+
+    private fun loadMainImage(uri: String?) {
+        uri?.let {
+            Glide.with(this)
+                .load(it)
+                .into(binding.ivMainPreview)
         }
     }
 
@@ -48,11 +85,13 @@ class ImagePreviewDialog : DialogFragment() {
     }
 
     companion object {
-        private const val ARG_IMAGE_URI = "image_uri"
+        private const val ARG_IMAGE_URIS = "image_uris"
+        private const val ARG_SELECTED_URI = "selected_uri"
 
-        fun newInstance(imageUri: String) = ImagePreviewDialog().apply {
+        fun newInstance(imageUris: List<String>, selectedUri: String) = ImagePreviewDialog().apply {
             arguments = Bundle().apply {
-                putString(ARG_IMAGE_URI, imageUri)
+                putStringArray(ARG_IMAGE_URIS, imageUris.toTypedArray())
+                putString(ARG_SELECTED_URI, selectedUri)
             }
         }
     }
