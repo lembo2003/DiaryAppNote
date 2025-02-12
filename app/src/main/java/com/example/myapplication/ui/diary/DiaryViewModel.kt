@@ -28,6 +28,9 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     private val _temporaryState = MutableStateFlow<EntryState?>(null)
     val temporaryState: StateFlow<EntryState?> = _temporaryState
 
+    private var originalImages: List<String> = emptyList()
+    private var deletedImages = mutableSetOf<String>()  // Track deleted images
+
     init {
         val database = DiaryDatabase.getDatabase(application)
         repository = DiaryRepository(database.diaryDao())
@@ -50,7 +53,14 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
         return try {
             val entry = repository.getEntry(id)
             entry?.also { 
-                _selectedImages.value = it.images
+                // Don't reset images if we're returning from image selection
+                if (_selectedImages.value.isEmpty()) {
+                    _selectedImages.value = it.images
+                }
+                // Only clear deleted images when first loading entry
+                if (deletedImages.isEmpty()) {
+                    deletedImages.clear()
+                }
             }
         } catch (e: Exception) {
             null
@@ -58,8 +68,11 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setSelectedImages(images: List<String>) {
-        viewModelScope.launch {
-            _selectedImages.value = images
+        // Keep track of deleted images and don't restore them
+        val newImages = images.filter { it !in deletedImages }
+        // Only update if the new list is different
+        if (newImages != _selectedImages.value) {
+            _selectedImages.value = newImages
         }
     }
 
@@ -97,9 +110,11 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     fun updateEntry(entry: DiaryEntry) {
         viewModelScope.launch {
             try {
+                val finalImages = entry.images.filter { it !in deletedImages }
+                
                 // Compress any new images
-                val existingImages = entry.images.filter { it.startsWith(getApplication<Application>().filesDir.absolutePath) }
-                val newImages = entry.images.filter { !it.startsWith(getApplication<Application>().filesDir.absolutePath) }
+                val existingImages = finalImages.filter { it.startsWith(getApplication<Application>().filesDir.absolutePath) }
+                val newImages = finalImages.filter { !it.startsWith(getApplication<Application>().filesDir.absolutePath) }
                 
                 val compressedNewImages = withContext(Dispatchers.IO) {
                     newImages.map { ImageUtils.compressAndSaveImage(getApplication(), it) }
@@ -110,8 +125,10 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
                     lastModified = LocalDateTime.now()
                 )
                 repository.updateEntry(updatedEntry)
-                // Clear selected images after successful update
+                
+                // Only clear states after successful update
                 _selectedImages.value = emptyList()
+                deletedImages.clear()
             } catch (e: Exception) {
                 // Handle error
             }
@@ -142,6 +159,8 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
             feeling = feeling,
             images = images
         )
+        // Also update selected images to maintain consistency
+        _selectedImages.value = images
     }
 
     fun restoreTemporaryState() {
@@ -152,14 +171,13 @@ class DiaryViewModel(application: Application) : AndroidViewModel(application) {
 
     fun clearTemporaryState() {
         _temporaryState.value = null
+        _selectedImages.value = emptyList()
+        deletedImages.clear()
     }
 
     fun removeImage(uri: String) {
-        viewModelScope.launch {
-            val currentImages = _selectedImages.value.toMutableList()
-            currentImages.remove(uri)
-            _selectedImages.value = currentImages
-        }
+        deletedImages.add(uri)
+        _selectedImages.value = _selectedImages.value.filter { it != uri }
     }
 }
 

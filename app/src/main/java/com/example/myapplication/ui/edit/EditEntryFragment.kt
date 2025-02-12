@@ -32,7 +32,7 @@ import androidx.fragment.app.activityViewModels
 
 class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
 
-    private val viewModel: DiaryViewModel by viewModels()
+    private val viewModel: DiaryViewModel by activityViewModels()
     private val sharedViewModel: SharedImageViewModel by activityViewModels()
     private val args: EditEntryFragmentArgs by navArgs()
     private val feelingAdapter = FeelingAdapter()
@@ -42,6 +42,7 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
     private var hasUnsavedChanges = false
     private var currentEntry: DiaryEntry? = null
     private val selectedImagesAdapter = SelectedImagesAdapter()
+    private var wasInEditMode = false
 
     override fun inflateViewBinding(
         inflater: LayoutInflater,
@@ -54,21 +55,23 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
         setupToolbar()
         setupContent()
         setupFeelings()
-        loadEntry()
         setupSelectedImages()
 
-        // Observe navigation result for selected images
+        // Load entry should be called after setting up the observers
+        // Observe selected images from navigation first
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ArrayList<String>>("selected_images")?.observe(
             viewLifecycleOwner
         ) { images ->
-            if (images != null && images.isNotEmpty()) {
+            if (images != null) {
                 viewModel.setSelectedImages(images)
-
                 hasUnsavedChanges = true
-                // Clear the saved state handle
+                // Clear the saved state handle after consuming it
                 findNavController().currentBackStackEntry?.savedStateHandle?.remove<ArrayList<String>>("selected_images")
             }
         }
+
+        // Then load the entry
+        loadEntry()
     }
 
     private fun setupToolbar() {
@@ -93,11 +96,8 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
 
             btnImage.setOnClickListener {
                 if (isEditMode) {
-                    // Save current state to the backstack before navigating
-                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                        "temp_images", 
-                        ArrayList(viewModel.selectedImages.value)
-                    )
+                    // Save current state before navigating
+                    saveCurrentState()
                     
                     findNavController().navigate(
                         EditEntryFragmentDirections.actionEditToPermission(
@@ -161,34 +161,34 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
 
     private fun toggleEditMode() {
         isEditMode = !isEditMode
-        binding.includeToolbar.apply {
-            btnEdit.setImageResource(
-                if (isEditMode) R.drawable.ic_close else R.drawable.ic_edit
-            )
-            btnImage.isEnabled = isEditMode
-            btnToolbarDelete.apply {
-                isEnabled = isEditMode
-                alpha = if (isEditMode) 1f else 0.5f
-            }
-            tvDate.isEnabled = isEditMode
-        }
-        
-        // Enable/disable text fields
+        updateEditModeUI()
+    }
+
+    private fun updateEditModeUI() {
         binding.apply {
+            // Enable/disable views based on edit mode
             etTitle.isEnabled = isEditMode
             etContent.isEnabled = isEditMode
-            
-            // Enable/disable feelings
-            rvFeelings.isEnabled = isEditMode
-            feelingAdapter.isEnabled = isEditMode
-            
-            // Show/hide save button
-            btnSave.isVisible = isEditMode
+            includeToolbar.apply {
+                btnImage.isEnabled = isEditMode
+                btnEdit.setImageResource(
+                    if (isEditMode) R.drawable.ic_close else R.drawable.ic_edit
+                )
+                btnToolbarDelete.apply {
+                    isEnabled = isEditMode
+                    alpha = if (isEditMode) 1f else 0.5f
+                }
+                tvDate.isEnabled = isEditMode
+            }
+            // Add this line to sync adapter's edit mode
+            selectedImagesAdapter.isEditMode = isEditMode
         }
         
-        // Update images edit mode
-        selectedImagesAdapter.isEditMode = isEditMode
-        selectedImagesAdapter.notifyDataSetChanged()
+        binding.apply {
+            rvFeelings.isEnabled = isEditMode
+            feelingAdapter.isEnabled = isEditMode
+            btnSave.isVisible = isEditMode
+        }
     }
 
     private fun validateInput(): Boolean {
@@ -270,27 +270,51 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
             if (currentEntry != null) {
                 binding.apply {
                     progressBar.isVisible = false
-                    etTitle.setText(currentEntry!!.title)
-                    etContent.setText(currentEntry!!.content)
-                    selectedDate = currentEntry!!.date
-                    includeToolbar.tvDate.text = selectedDate.format(
-                        DateTimeFormatter.ofPattern("EEE, MMM d")
-                    )
-                    selectedFeeling = Feeling.values().find { it.name == currentEntry!!.feeling }
-                    feelingAdapter.setSelectedFeeling(selectedFeeling)
+                    
+                    // Only set these values if we don't have temporary state
+                    if (viewModel.temporaryState.value == null) {
+                        etTitle.setText(currentEntry!!.title)
+                        etContent.setText(currentEntry!!.content)
+                        selectedDate = currentEntry!!.date
+                        includeToolbar.tvDate.text = selectedDate.format(
+                            DateTimeFormatter.ofPattern("EEE, MMM d")
+                        )
+                        selectedFeeling = Feeling.values().find { it.name == currentEntry!!.feeling }
+                        feelingAdapter.setSelectedFeeling(selectedFeeling)
+                        
+                        // Only set images if we don't have any selected images
+                        if (viewModel.selectedImages.value.isEmpty()) {
+                            viewModel.setSelectedImages(currentEntry!!.images)
+                        }
+                    } else {
+                        // Restore from temporary state
+                        restoreFromTemporaryState()
+                    }
                     
                     // Make edit and delete buttons visible
                     includeToolbar.btnEdit.isVisible = true
                     includeToolbar.btnToolbarDelete.isVisible = true
-                    
-                    // Load and display images - just set in ViewModel, collector will handle UI update
-                    val entryImages = currentEntry!!.images
-                    viewModel.setSelectedImages(entryImages)
                 }
             } else {
                 // Handle entry not found
                 showError(getString(R.string.entry_not_found))
                 findNavController().navigateUp()
+            }
+        }
+    }
+
+    private fun restoreFromTemporaryState() {
+        viewModel.temporaryState.value?.let { state ->
+            binding.apply {
+                etTitle.setText(state.title)
+                etContent.setText(state.content)
+                selectedDate = state.date
+                includeToolbar.tvDate.text = selectedDate.format(
+                    DateTimeFormatter.ofPattern("EEE, MMM d")
+                )
+                selectedFeeling = Feeling.values().find { it.name == state.feeling }
+                feelingAdapter.setSelectedFeeling(selectedFeeling)
+                // Don't set images here as they're handled by the observer
             }
         }
     }
@@ -318,6 +342,8 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
                 )
             )
         }
+        // Clear all temporary state
+        clearAllTemporaryState()
         findNavController().navigateUp()
     }
 
@@ -328,13 +354,14 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
         }
 
         selectedImagesAdapter.apply {
-            isEditMode = false
+            isEditMode = isEditMode  // Sync with current edit mode
             onImageClick = { clickedUri ->
                 ImagePreviewDialog.newInstance(
                     imageUris = viewModel.selectedImages.value,
                     selectedUri = clickedUri
                 ).show(childFragmentManager, "image_preview")
             }
+            
             onDeleteClick = { uri ->
                 if (isEditMode) {
                     viewModel.removeImage(uri)
@@ -364,24 +391,11 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
         }
     }
 
-    private fun restoreState() {
-        viewModel.temporaryState.value?.let { state ->
-            binding.apply {
-                etTitle.setText(state.title)
-                etContent.setText(state.content)
-                selectedDate = state.date
-                includeToolbar.tvDate.text = selectedDate.format(
-                    DateTimeFormatter.ofPattern("EEE, MMM d")
-                )
-                selectedFeeling = Feeling.values().find { it.name == state.feeling }
-                feelingAdapter.setSelectedFeeling(selectedFeeling)
-            }
-        }
-    }
-
     private fun deleteEntry() {
         currentEntry?.let { entry ->
             viewModel.deleteEntry(entry)
+            // Clear all temporary state before navigating to home
+            clearAllTemporaryState()
             findNavController().navigate(
                 EditEntryFragmentDirections.actionEditToHome()
             )
@@ -394,20 +408,46 @@ class EditEntryFragment : BaseFragment<FragmentEditEntryBinding>() {
                 .setTitle(getString(R.string.wait))
                 .setMessage(getString(R.string.discard_changes_message))
                 .setPositiveButton(getString(R.string.discard)) { _, _ ->
+                    // Clear all temporary state before navigating back
+                    clearAllTemporaryState()
                     findNavController().navigateUp()
                 }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         } else {
+            // Clear all temporary state before navigating back
+            clearAllTemporaryState()
             findNavController().navigateUp()
         }
     }
 
+    private fun clearAllTemporaryState() {
+        viewModel.clearTemporaryState()
+        // Also clear the saved state handle
+        findNavController().currentBackStackEntry?.savedStateHandle?.remove<ArrayList<String>>("selected_images")
+    }
+
     override fun onResume() {
         super.onResume()
-        // Restore images from backstack if they exist
-        findNavController().currentBackStackEntry?.savedStateHandle?.remove<ArrayList<String>>("temp_images")?.let { images ->
-            viewModel.setSelectedImages(images)
+        // Only restore edit mode state
+        if (wasInEditMode) {
+            isEditMode = true
+            updateEditModeUI()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Save current state only if we have unsaved changes
+        if (hasUnsavedChanges) {
+            saveCurrentState()
+        }
+        wasInEditMode = isEditMode
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Clear all temporary state when fragment is destroyed
+        clearAllTemporaryState()
     }
 } 

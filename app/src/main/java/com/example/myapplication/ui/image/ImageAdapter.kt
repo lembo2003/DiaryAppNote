@@ -15,6 +15,11 @@ class ImageAdapter : ListAdapter<ImageItem, ImageAdapter.ViewHolder>(ImageDiffCa
     private val selectedImages = mutableSetOf<String>()
     var onSelectionChanged: ((Int) -> Unit)? = null
 
+    // Add this helper function to extract the filename from both types of URIs
+    private fun getImageIdentifier(uri: String): String {
+        return uri.substringAfterLast("/")
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemImageBinding.inflate(
@@ -30,7 +35,10 @@ class ImageAdapter : ListAdapter<ImageItem, ImageAdapter.ViewHolder>(ImageDiffCa
     }
 
     fun getSelectedImages(): List<String> {
-        return selectedImages.toList()
+        // Return the full URIs of selected images
+        return currentList.filter { 
+            getImageIdentifier(it.uri) in selectedImages 
+        }.map { it.uri }
     }
 
     fun clearSelections() {
@@ -41,8 +49,8 @@ class ImageAdapter : ListAdapter<ImageItem, ImageAdapter.ViewHolder>(ImageDiffCa
 
     fun preSelectImages(images: List<String>) {
         selectedImages.clear()
-        selectedImages.addAll(images)
-        notifyDataSetChanged()
+        // Store the filenames instead of full paths
+        selectedImages.addAll(images.map { getImageIdentifier(it) })
         onSelectionChanged?.invoke(selectedImages.size)
     }
 
@@ -64,15 +72,16 @@ class ImageAdapter : ListAdapter<ImageItem, ImageAdapter.ViewHolder>(ImageDiffCa
                 .centerCrop()
                 .into(binding.imageView)
 
-            // Set the check visibility based on selection state
-            binding.checkView.isVisible = selectedImages.contains(item.uri)
+            // Compare filenames instead of full paths
+            binding.checkView.isVisible = getImageIdentifier(item.uri) in selectedImages
         }
 
         private fun toggleSelection(uri: String) {
-            if (selectedImages.contains(uri)) {
-                selectedImages.remove(uri)
+            val identifier = getImageIdentifier(uri)
+            if (identifier in selectedImages) {
+                selectedImages.remove(identifier)
             } else {
-                selectedImages.add(uri)
+                selectedImages.add(identifier)
             }
             notifyItemChanged(adapterPosition)
             onSelectionChanged?.invoke(selectedImages.size)

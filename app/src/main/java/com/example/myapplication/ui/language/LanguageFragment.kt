@@ -59,10 +59,16 @@ class LanguageFragment : BaseFragment<FragmentLanguageBinding>() {
         viewLifecycleOwner.lifecycleScope.launch {
             preferencesDataStore.selectedLanguage.collectLatest { languageCode ->
                 currentLanguageCode = languageCode
-                // Update the list with the current language
-                languageAdapter.submitList(getSampleLanguages(languageCode))
-                // Update the radio button selection
+                val languages = getSampleLanguages(languageCode)
+                languageAdapter.submitList(languages)
                 languageAdapter.setSelectedLanguage(languageCode)
+                
+                // If this is first launch (blank language code), pre-select English
+                if (languageCode.isBlank()) {
+                    selectedLanguage = languages.first() // English is first in the list
+                    languageAdapter.setSelectedLanguage("gb")
+                    preferencesDataStore.setSelectedLanguage("gb")
+                }
             }
         }
 

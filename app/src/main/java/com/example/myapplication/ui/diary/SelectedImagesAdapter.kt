@@ -14,6 +14,12 @@ import java.io.File
 class SelectedImagesAdapter : ListAdapter<String, SelectedImagesAdapter.ViewHolder>(DiffCallback()) {
 
     var isEditMode: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                notifyDataSetChanged()  // Automatically refresh when edit mode changes
+            }
+        }
     var onImageClick: ((String) -> Unit)? = null
     var onDeleteClick: ((String) -> Unit)? = null
 

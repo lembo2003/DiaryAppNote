@@ -26,20 +26,20 @@
                 android:id="@+id/cardEntry"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_margin="16dp"
+                android:layout_weight="1"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/note_background"
                     android:orientation="vertical"
-                    android:paddingTop="64dp"
                     android:paddingStart="32dp"
+                    android:paddingTop="64dp"
                     android:paddingEnd="16dp"
-                    android:paddingBottom="16dp"
-                    android:background="@drawable/note_background">
+                    android:paddingBottom="16dp">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilTitle"
@@ -111,11 +111,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="@font/mplusrounded1c"
                 android:text="@string/feeling"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
-                android:fontFamily="@font/mplusrounded1c"
-                android:textFontWeight="600" />
+                android:textFontWeight="600"
+                android:textSize="16sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFeelings"
@@ -130,10 +130,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:backgroundTint="@color/primary"
+                android:fontFamily="@font/mplusrounded1c"
                 android:padding="12dp"
                 android:text="@string/save"
                 android:textColor="@color/white"
-                android:fontFamily="@font/mplusrounded1c"
                 android:textFontWeight="600"
                 app:cornerRadius="8dp" />
 

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.base.BaseFragment
 import com.example.myapplication.databinding.FragmentImageBinding
+import com.example.myapplication.ui.diary.DiaryViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,9 +23,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.example.myapplication.ui.shared.SharedImageViewModel
 
+
 class ImageFragment : BaseFragment<FragmentImageBinding>() {
 
     private val sharedViewModel: SharedImageViewModel by activityViewModels()
+    private val diaryViewModel: DiaryViewModel by activityViewModels()
     private val imageAdapter = ImageAdapter()
     private var loadJob: Job? = null
     private val args: ImageFragmentArgs by navArgs()
@@ -45,7 +48,7 @@ class ImageFragment : BaseFragment<FragmentImageBinding>() {
             btnDone.setOnClickListener {
                 val selectedImages = imageAdapter.getSelectedImages()
                 if (selectedImages.isNotEmpty()) {
-                    sharedViewModel.setSelectedImages(selectedImages)
+                    // Use savedStateHandle for both flows
                     findNavController().previousBackStackEntry?.savedStateHandle?.set(
                         "selected_images",
                         ArrayList(selectedImages)
@@ -66,10 +69,12 @@ class ImageFragment : BaseFragment<FragmentImageBinding>() {
             }
         }
 
-        // Pre-select images from arguments
+        // Pre-select images from arguments BEFORE loading images
         args.selectedImages?.let { images ->
-            imageAdapter.preSelectImages(images.toList())
-            sharedViewModel.setSelectedImages(images.toList())
+            if (images.isNotEmpty()) {
+                imageAdapter.preSelectImages(images.toList())
+                // Don't set btnDone visibility here, wait until after images are loaded
+            }
         }
 
         // Load images
@@ -89,6 +94,10 @@ class ImageFragment : BaseFragment<FragmentImageBinding>() {
                 } else {
                     imageAdapter.submitList(images)
                     binding.rvImages.isVisible = true
+                    
+                    // Update Done button visibility based on actual selections after list is loaded
+                    val selectedCount = imageAdapter.getSelectedImages().size
+                    binding.btnDone.isVisible = selectedCount > 0
                 }
             } catch (e: Exception) {
                 showError(e.message ?: getString(R.string.error_loading_images))
